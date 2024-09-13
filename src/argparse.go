@@ -17,6 +17,7 @@ var (
 )
 
 var CLI struct {
+	Config      string `help:"configuration file" short:"c"`
 	Bind        string `help:"bind to" short:"b" default:":9100"`
 	Print       bool   `help:"just print data, no web server" short:"p"`
 	LogFile     string `help:"log file" default:"/dev/stdout"`

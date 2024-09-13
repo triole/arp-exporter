@@ -12,7 +12,7 @@ func main() {
 
 	lg.Info("run "+appName, logseal.F{"bind": CLI.Bind})
 	if CLI.Print {
-		arp, _ := getArpTable()
+		arp, _ := initArpTable()
 		fmt.Printf("%+v\n", arp)
 	} else {
 		runServer()
