@@ -17,7 +17,8 @@ var (
 )
 
 var CLI struct {
-	Bind        string `help:"bind to" short:"b" default:":8080"`
+	Bind        string `help:"bind to" short:"b" default:":9100"`
+	Print       bool   `help:"just print data, no web server" short:"p"`
 	LogFile     string `help:"log file" default:"/dev/stdout"`
 	LogLevel    string `help:"log level" default:"info" enum:"trace,debug,info,error"`
 	LogNoColors bool   `help:"disable output colours, print plain text"`
