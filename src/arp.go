@@ -21,8 +21,8 @@ func initArpTable() (arpList tArpTable, err error) {
 
 	for _, line := range strings.Split(string(by), "\n") {
 		arp := tArp{
-			MAC: findAll("([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})", line),
-			IP:  findAll("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}", line),
+			MAC: rx.findAll(rx.MAC, line),
+			IP:  rx.findAll(rx.IP, line),
 		}
 		if arp.MAC != "" && arp.IP != "" {
 			arpList = append(arpList, arp)
