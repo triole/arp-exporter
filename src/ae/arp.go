@@ -17,6 +17,7 @@ func (ae *tAE) GetArpTable() (err error) {
 				MAC: ae.findAll(ae.Rx.MAC, line),
 				IP:  ae.findAll(ae.Rx.IP, line),
 			}
+			newEntry.Name = ae.Conf.GetHostName(newEntry.MAC)
 			if newEntry.MAC != "" && newEntry.IP != "" {
 				ae.ArpTable = append(ae.ArpTable, newEntry)
 			}

@@ -16,8 +16,9 @@ type tAE struct {
 }
 
 type tArpEntry struct {
-	MAC string `json:"mac"`
-	IP  string `json:"ip"`
+	MAC  string `json:"mac"`
+	IP   string `json:"ip"`
+	Name string `json:"name,omitempty"`
 }
 
 type tRegexSchemes struct {
