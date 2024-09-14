@@ -11,10 +11,14 @@ import (
 func main() {
 	parseArgs()
 	lg := logseal.Init(CLI.LogLevel, CLI.LogFile, CLI.LogNoColors, CLI.LogJSON)
-	conf := conf.Init(CLI.Config, CLI.Bind, lg)
+	conf, err := conf.Init(CLI.Config, CLI.Bind, lg)
 	ae := ae.Init(conf, lg)
 
-	lg.Info("run "+appName, logseal.F{"bind": CLI.Bind})
+	if err == nil {
+		lg.Info("run "+appName, logseal.F{"bind": CLI.Bind, "config": conf.ConfigFile})
+	} else {
+		lg.Info("run "+appName, logseal.F{"bind": CLI.Bind})
+	}
 	if CLI.Print {
 		err := ae.GetArpTable()
 		if err == nil {
