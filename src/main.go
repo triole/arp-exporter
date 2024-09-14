@@ -15,10 +15,11 @@ func main() {
 	ae := ae.Init(conf, lg)
 
 	if err == nil {
-		lg.Info("run "+appName, logseal.F{"bind": CLI.Bind, "config": conf.ConfigFile})
+		lg.Info("run "+appName, logseal.F{"bind": CLI.Bind, "config_file": conf.ConfigFile})
 	} else {
 		lg.Info("run "+appName, logseal.F{"bind": CLI.Bind})
 	}
+	lg.Debug("configuration", logseal.F{"config": fmt.Sprintf("%+v", conf)})
 	if CLI.Print {
 		err := ae.GetArpTable()
 		if err == nil {
