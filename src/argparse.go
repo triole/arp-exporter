@@ -3,6 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/user"
+	"path"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -12,7 +15,7 @@ import (
 var (
 	BUILDTAGS      string
 	appName        = "arp-exporter"
-	appDescription = "prometheus metrics arp table exporter"
+	appDescription = "arp table exporter, supports prometheus metrics or json format"
 	appMainversion = "0.1"
 )
 
@@ -29,6 +32,7 @@ var CLI struct {
 }
 
 func parseArgs() {
+	homeFolder := getHome()
 	ctx := kong.Parse(&CLI,
 		kong.Name(appName),
 		kong.Description(appDescription),
@@ -37,6 +41,15 @@ func parseArgs() {
 			Compact: true,
 			Summary: true,
 		}),
+		kong.Vars{
+			"config": returnFirstExistingFile(
+				[]string{
+					path.Join(getBindir(), appName+".yaml"),
+					path.Join(homeFolder, ".conf", appName, "conf.yaml"),
+					path.Join(homeFolder, ".config", appName, "conf.yaml"),
+				},
+			),
+		},
 	)
 	_ = ctx.Run()
 
@@ -45,6 +58,50 @@ func parseArgs() {
 		os.Exit(0)
 	}
 	// ctx.FatalIfErrorf(err)
+}
+
+func getBindir() (s string) {
+	ex, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+	s = filepath.Dir(ex)
+	return
+}
+
+func getHome() string {
+	usr, err := user.Current()
+	if err != nil {
+		fmt.Printf("unable to retrieve user's home folder")
+	}
+	return usr.HomeDir
+}
+
+func isFile(filePath string) bool {
+	stat, err := os.Stat(makeAbs(filePath))
+	if !os.IsNotExist(err) && !stat.IsDir() {
+		return true
+	}
+	return false
+}
+
+func makeAbs(filename string) string {
+	filename, err := filepath.Abs(filename)
+	if err != nil {
+		fmt.Printf("can not assemble absolute filename %q\n", err)
+		os.Exit(1)
+	}
+	return filename
+}
+
+func returnFirstExistingFile(arr []string) (s string) {
+	for _, el := range arr {
+		if isFile(el) {
+			s = el
+			break
+		}
+	}
+	return
 }
 
 func printBuildTags(buildtags string) {

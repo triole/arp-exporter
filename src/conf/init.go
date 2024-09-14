@@ -9,17 +9,17 @@ import (
 )
 
 type Conf struct {
-	ConfigFile string
+	ConfigFile interface{}
 	Bind       string
 	Hosts      map[string]string
 	Lg         logseal.Logseal
 }
 
-func Init(configFile, bind string, lg logseal.Logseal) (conf Conf, err error) {
-	var cf string
+func Init(configFile, bind string, lg logseal.Logseal) (conf Conf) {
+	conf.ConfigFile = nil
 	if configFile != "" {
-
-		cf, err = filepath.Abs(configFile)
+		cf, err := filepath.Abs(configFile)
+		conf.ConfigFile = cf
 		lg.IfErrFatal(
 			"unable to construct full path",
 			logseal.F{"path": configFile, "error": err},
@@ -49,6 +49,5 @@ func Init(configFile, bind string, lg logseal.Logseal) (conf Conf, err error) {
 	}
 	conf.Bind = bind
 	conf.Lg = lg
-	conf.ConfigFile = cf
 	return
 }
