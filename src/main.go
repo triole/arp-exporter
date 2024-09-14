@@ -1,26 +1,26 @@
 package main
 
 import (
+	"ae/src/ae"
+	"ae/src/conf"
 	"fmt"
 
 	"github.com/triole/logseal"
 )
 
-var (
-	lg logseal.Logseal
-	rx tRx
-)
-
 func main() {
 	parseArgs()
-	rx = initRx()
-	lg = logseal.Init(CLI.LogLevel, CLI.LogFile, CLI.LogNoColors, CLI.LogJSON)
+	lg := logseal.Init(CLI.LogLevel, CLI.LogFile, CLI.LogNoColors, CLI.LogJSON)
+	conf := conf.Init(CLI.Config, CLI.Bind, lg)
+	ae := ae.Init(conf, lg)
 
 	lg.Info("run "+appName, logseal.F{"bind": CLI.Bind})
 	if CLI.Print {
-		arp, _ := initArpTable()
-		fmt.Printf("%+v\n", arp)
+		err := ae.GetArpTable()
+		if err == nil {
+			fmt.Printf("%+v\n", ae.ArpTable)
+		}
 	} else {
-		runServer()
+		ae.RunServer()
 	}
 }
