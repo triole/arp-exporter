@@ -23,7 +23,7 @@ type Conf struct {
 }
 
 func Init(cli interface{}, lg logseal.Logseal) (conf Conf) {
-	conf.ArpTable = getcli(cli, "ArpTable").(string)
+	conf.ArpTable = getcli(cli, "ArpTableFile").(string)
 	conf.HostnameConfig = getcli(cli, "HostnameConfig").(string)
 	var err error
 	if conf.HostnameConfig != "" {
