@@ -3,6 +3,7 @@ package ae
 import (
 	"os"
 	"os/exec"
+	"sort"
 	"strings"
 
 	"github.com/triole/logseal"
@@ -38,6 +39,7 @@ func (ae *tAE) GetArpTable() (err error) {
 	} else {
 		ae.Lg.Error("unable to get arp table", logseal.F{"error": err})
 	}
+	sort.Sort(ae.ArpTable)
 	return
 }
 
