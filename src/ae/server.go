@@ -14,9 +14,9 @@ import (
 var indexPage string
 
 func (ae tAE) RunServer() {
-	http.HandleFunc("/", ae.indexPage)
 	http.HandleFunc("/metrics", ae.servePrometheusMetrics)
 	http.HandleFunc("/json", ae.serveJSON)
+	http.HandleFunc("/", ae.indexPage)
 	http.ListenAndServe(ae.Conf.Bind, nil)
 }
 

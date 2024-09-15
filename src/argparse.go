@@ -21,8 +21,8 @@ var (
 
 var CLI struct {
 	ArpTableFile   string `help:"retrieve arp table from file, default is by command 'arp -an'" short:"f"`
-	Info           string `help:"look up and display mac address vendor information" short:"i"`
-	List           bool   `help:"list all mac vendors in db" short:"l"`
+	MacInfo        string `help:"look up and display mac address vendor information" short:"m"`
+	ListVendors    bool   `help:"list all vendors in db" short:"l"`
 	HostnameConfig string `help:"host name configuration file" short:"c"`
 	EnableVendors  bool   `help:"enable displaying mac vendors" short:"e"`
 	Server         bool   `help:"run web server" short:"s"`

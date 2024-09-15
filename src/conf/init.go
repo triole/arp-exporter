@@ -2,7 +2,6 @@ package conf
 
 import (
 	"os"
-	"path/filepath"
 	"reflect"
 	"strings"
 
@@ -24,20 +23,15 @@ type Conf struct {
 
 func Init(cli interface{}, lg logseal.Logseal) (conf Conf) {
 	conf.ArpTable = getcli(cli, "ArpTableFile").(string)
+	if conf.ArpTable != "" {
+		conf.ArpTable = absPathFatal(conf.ArpTable, lg)
+		existsFatal(conf.ArpTable, lg)
+	}
 	conf.HostnameConfig = getcli(cli, "HostnameConfig").(string)
 	var err error
 	if conf.HostnameConfig != "" {
-		conf.HostnameConfig, err = filepath.Abs(conf.HostnameConfig)
-		lg.IfErrFatal(
-			"unable to construct full path",
-			logseal.F{"path": conf.HostnameConfig, "error": err},
-		)
-
-		_, err = os.Stat(conf.HostnameConfig)
-		lg.IfErrFatal(
-			"file does not exist",
-			logseal.F{"path": conf.HostnameConfig, "error": err},
-		)
+		conf.HostnameConfig = absPathFatal(conf.HostnameConfig, lg)
+		existsFatal(conf.HostnameConfig, lg)
 
 		var raw []byte
 		raw, err = os.ReadFile(conf.HostnameConfig)
@@ -56,8 +50,8 @@ func Init(cli interface{}, lg logseal.Logseal) (conf Conf) {
 		}
 	}
 	conf.Bind = getcli(cli, "Bind").(string)
-	conf.Info = getcli(cli, "Info").(string)
-	conf.List = getcli(cli, "List").(bool)
+	conf.Info = getcli(cli, "MacInfo").(string)
+	conf.List = getcli(cli, "ListVendors").(bool)
 	conf.EnableVendors = getcli(cli, "EnableVendors").(bool)
 	conf.Lg = lg
 	return

@@ -15,12 +15,12 @@ func main() {
 	conf := conf.Init(CLI, lg)
 	ae := ae.Init(conf, lg)
 
-	if CLI.Info != "" {
-		ae.PrintMacInformation(CLI.Info)
+	if CLI.MacInfo != "" {
+		ae.PrintMacInformation(CLI.MacInfo)
 		os.Exit(0)
 	}
 
-	if CLI.List {
+	if CLI.ListVendors {
 		ae.ListVendors()
 		os.Exit(0)
 	}
