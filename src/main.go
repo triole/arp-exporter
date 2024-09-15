@@ -12,7 +12,7 @@ import (
 func main() {
 	parseArgs()
 	lg := logseal.Init(CLI.LogLevel, CLI.LogFile, CLI.LogNoColors, CLI.LogJSON)
-	conf := conf.Init(CLI.HostnameConfig, CLI.Bind, CLI.Info, CLI.List, CLI.EnableVendors, lg)
+	conf := conf.Init(CLI, lg)
 	ae := ae.Init(conf, lg)
 
 	if CLI.Info != "" {
@@ -26,7 +26,15 @@ func main() {
 	}
 
 	if CLI.Server {
-		lg.Info("run "+appName, logseal.F{"bind": CLI.Bind, "config_file": conf.ConfigFile})
+		fields := logseal.F{}
+		fields["bind"] = CLI.Bind
+		if conf.ArpTable != "" {
+			fields["arptable_file"] = conf.ArpTable
+		}
+		if conf.HostnameConfig != "" {
+			fields["hostname_config"] = conf.HostnameConfig
+		}
+		lg.Info("run "+appName, fields)
 		lg.Debug("configuration", logseal.F{"config": fmt.Sprintf("%+v", conf)})
 		ae.RunServer()
 	} else {

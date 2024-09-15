@@ -1,6 +1,7 @@
 package ae
 
 import (
+	"os"
 	"os/exec"
 	"strings"
 
@@ -10,7 +11,12 @@ import (
 func (ae *tAE) GetArpTable() (err error) {
 	var by []byte
 	ae.ArpTable = []tArpEntry{}
-	by, err = exec.Command("arp", "-an").Output()
+	if ae.Conf.ArpTable == "" {
+		by, err = exec.Command("arp", "-an").Output()
+	} else {
+		by, err = ae.readArpTableFile()
+	}
+
 	if err == nil {
 		for _, line := range strings.Split(string(by), "\n") {
 			newEntry := tArpEntry{
@@ -40,4 +46,9 @@ func (ae *tAE) PrintArpTable() {
 	if err == nil {
 		ae.pprint(ae.ArpTable)
 	}
+}
+
+func (ae *tAE) readArpTableFile() (by []byte, err error) {
+	by, err = os.ReadFile(ae.Conf.ArpTable)
+	return
 }
