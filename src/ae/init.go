@@ -5,6 +5,8 @@ import (
 	"regexp"
 
 	"github.com/triole/logseal"
+
+	_ "embed"
 )
 
 type tAE struct {
@@ -12,13 +14,15 @@ type tAE struct {
 	Hostnames map[string]string
 	Conf      conf.Conf
 	Rx        tRegexSchemes
+	Vendors   tVendors
 	Lg        logseal.Logseal
 }
 
 type tArpEntry struct {
-	MAC  string `json:"mac"`
-	IP   string `json:"ip"`
-	Name string `json:"name,omitempty"`
+	MAC    string `json:"mac"`
+	IP     string `json:"ip"`
+	Name   string `json:"name,omitempty"`
+	Vendor string `json:"vendor,omitempty"`
 }
 
 type tRegexSchemes struct {
@@ -30,6 +34,9 @@ func Init(conf conf.Conf, lg logseal.Logseal) (ae tAE) {
 	ae.Conf = conf
 	ae.Rx = initRegexSchemes()
 	ae.Lg = lg
+	if ae.Conf.EnableVendors {
+		ae.unmarshalVendors()
+	}
 	return
 }
 

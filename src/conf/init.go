@@ -9,13 +9,14 @@ import (
 )
 
 type Conf struct {
-	ConfigFile interface{}
-	Bind       string
-	Hosts      map[string]string
-	Lg         logseal.Logseal
+	ConfigFile    interface{}
+	Bind          string
+	EnableVendors bool
+	Hosts         map[string]string
+	Lg            logseal.Logseal
 }
 
-func Init(configFile, bind string, lg logseal.Logseal) (conf Conf) {
+func Init(configFile, bind string, enableVendors bool, lg logseal.Logseal) (conf Conf) {
 	conf.ConfigFile = nil
 	if configFile != "" {
 		cf, err := filepath.Abs(configFile)
@@ -48,6 +49,7 @@ func Init(configFile, bind string, lg logseal.Logseal) (conf Conf) {
 		}
 	}
 	conf.Bind = bind
+	conf.EnableVendors = enableVendors
 	conf.Lg = lg
 	return
 }

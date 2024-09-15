@@ -1,6 +1,8 @@
 package ae
 
 import (
+	"encoding/json"
+	"fmt"
 	"os/exec"
 	"strings"
 
@@ -17,8 +19,15 @@ func (ae *tAE) GetArpTable() (err error) {
 				MAC: ae.findAll(ae.Rx.MAC, line),
 				IP:  ae.findAll(ae.Rx.IP, line),
 			}
-			newEntry.Name = ae.Conf.GetHostName(newEntry.MAC)
 			if newEntry.MAC != "" && newEntry.IP != "" {
+				newEntry.Name = ae.Conf.GetHostName(newEntry.MAC)
+				var vendor tVendor
+				if ae.Conf.EnableVendors {
+					vendor = ae.getVendor(newEntry.MAC)
+				}
+				if vendor.Name != "" {
+					newEntry.Vendor = vendor.Name
+				}
 				ae.ArpTable = append(ae.ArpTable, newEntry)
 			}
 		}
@@ -26,4 +35,16 @@ func (ae *tAE) GetArpTable() (err error) {
 		ae.Lg.Error("unable to get arp table", logseal.F{"error": err})
 	}
 	return
+}
+
+func (ae *tAE) PrintArpTable() {
+	err := ae.GetArpTable()
+	if err == nil {
+		ae.pprint(ae.ArpTable)
+	}
+}
+
+func (ae *tAE) pprint(i interface{}) {
+	s, _ := json.MarshalIndent(i, "", "  ")
+	fmt.Println(string(s))
 }

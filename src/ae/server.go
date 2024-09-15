@@ -17,14 +17,7 @@ func (ae tAE) RunServer() {
 func (ae tAE) servePrometheusMetrics(w http.ResponseWriter, r *http.Request) {
 	err := ae.GetArpTable()
 	if err == nil {
-		metrics := ""
-		for _, el := range ae.ArpTable {
-			metrics += "#HELP\n"
-			metrics += "#TYPE\n"
-			metrics += "arp_exporter{" +
-				"ip=\"" + el.IP + "\", mac=\"" + el.MAC +
-				"\"} 0\n"
-		}
+		metrics := ae.makePrometheusMetrics()
 		ae.Lg.Debug(
 			"serve prometheus metrics", logseal.F{"client": getClientIP(r)},
 		)
