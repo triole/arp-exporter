@@ -1,8 +1,6 @@
 package ae
 
 import (
-	"encoding/json"
-	"fmt"
 	"os/exec"
 	"strings"
 
@@ -42,9 +40,4 @@ func (ae *tAE) PrintArpTable() {
 	if err == nil {
 		ae.pprint(ae.ArpTable)
 	}
-}
-
-func (ae *tAE) pprint(i interface{}) {
-	s, _ := json.MarshalIndent(i, "", "  ")
-	fmt.Println(string(s))
 }

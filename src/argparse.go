@@ -20,6 +20,8 @@ var (
 )
 
 var CLI struct {
+	Info          string `help:"look up and display mac address vendor information" short:"i"`
+	List          bool   `help:"list all vendors in db" short:"l"`
 	Config        string `help:"configuration file" short:"c"`
 	EnableVendors bool   `help:"enable displaying mac vendors" short:"e"`
 	Server        bool   `help:"run web server" short:"s"`

@@ -34,7 +34,7 @@ func Init(conf conf.Conf, lg logseal.Logseal) (ae tAE) {
 	ae.Conf = conf
 	ae.Rx = initRegexSchemes()
 	ae.Lg = lg
-	if ae.Conf.EnableVendors {
+	if ae.Conf.Info != "" || ae.Conf.List || ae.Conf.EnableVendors {
 		ae.unmarshalVendors()
 	}
 	return
