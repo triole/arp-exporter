@@ -21,9 +21,9 @@ var (
 
 var CLI struct {
 	Config        string `help:"configuration file" short:"c"`
-	Bind          string `help:"bind to" short:"b" default:":9100"`
-	Print         bool   `help:"just print data, no web server" short:"p"`
 	EnableVendors bool   `help:"enable displaying mac vendors" short:"e"`
+	Server        bool   `help:"run web server" short:"s"`
+	Bind          string `help:"bind to" short:"b" default:":9100"`
 	LogFile       string `help:"log file" default:"/dev/stdout"`
 	LogLevel      string `help:"log level" default:"info" enum:"trace,debug,info,error"`
 	LogNoColors   bool   `help:"disable output colours, print plain text"`

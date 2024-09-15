@@ -14,11 +14,11 @@ func main() {
 	conf := conf.Init(CLI.Config, CLI.Bind, CLI.EnableVendors, lg)
 	ae := ae.Init(conf, lg)
 
-	if CLI.Print {
-		ae.PrintArpTable()
-	} else {
+	if CLI.Server {
 		lg.Info("run "+appName, logseal.F{"bind": CLI.Bind, "config_file": conf.ConfigFile})
 		lg.Debug("configuration", logseal.F{"config": fmt.Sprintf("%+v", conf)})
 		ae.RunServer()
+	} else {
+		ae.PrintArpTable()
 	}
 }
