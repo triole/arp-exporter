@@ -20,18 +20,18 @@ var (
 )
 
 var CLI struct {
-	Info          string `help:"look up and display mac address vendor information" short:"i"`
-	List          bool   `help:"list all vendors in db" short:"l"`
-	Config        string `help:"configuration file" short:"c"`
-	EnableVendors bool   `help:"enable displaying mac vendors" short:"e"`
-	Server        bool   `help:"run web server" short:"s"`
-	Bind          string `help:"bind to" short:"b" default:":9100"`
-	LogFile       string `help:"log file" default:"/dev/stdout"`
-	LogLevel      string `help:"log level" default:"info" enum:"trace,debug,info,error"`
-	LogNoColors   bool   `help:"disable output colours, print plain text"`
-	LogJSON       bool   `help:"enable json log, instead of text one"`
-	DryRun        bool   `help:"dry run, just print operations that would run" short:"n"`
-	VersionFlag   bool   `help:"display version" short:"V"`
+	ArpTable       string `help:"retrieve arp table from file, default is by command (arp -an)" short:"a"`
+	Info           string `help:"look up and display mac address vendor information" short:"i"`
+	List           bool   `help:"list all vendors in db" short:"l"`
+	HostnameConfig string `help:"host name configuration file" short:"c"`
+	EnableVendors  bool   `help:"enable displaying mac vendors" short:"e"`
+	Server         bool   `help:"run web server" short:"s"`
+	Bind           string `help:"where to bind the server to" short:"b" default:":9100"`
+	LogFile        string `help:"log file" default:"/dev/stdout"`
+	LogLevel       string `help:"log level" default:"info" enum:"trace,debug,info,error"`
+	LogNoColors    bool   `help:"disable output colours, print plain text"`
+	LogJSON        bool   `help:"enable json log, instead of text one"`
+	VersionFlag    bool   `help:"display version" short:"V"`
 }
 
 func parseArgs() {

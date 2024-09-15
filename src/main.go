@@ -12,7 +12,7 @@ import (
 func main() {
 	parseArgs()
 	lg := logseal.Init(CLI.LogLevel, CLI.LogFile, CLI.LogNoColors, CLI.LogJSON)
-	conf := conf.Init(CLI.Config, CLI.Bind, CLI.Info, CLI.List, CLI.EnableVendors, lg)
+	conf := conf.Init(CLI.HostnameConfig, CLI.Bind, CLI.Info, CLI.List, CLI.EnableVendors, lg)
 	ae := ae.Init(conf, lg)
 
 	if CLI.Info != "" {
