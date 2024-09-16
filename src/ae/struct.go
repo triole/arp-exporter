@@ -14,7 +14,7 @@ type tAE struct {
 	Hostnames map[string]string
 	Conf      conf.Conf
 	Rx        tRegexSchemes
-	Vendors   tVendors
+	Vendors   tVendorsMap
 	Lg        logseal.Logseal
 }
 

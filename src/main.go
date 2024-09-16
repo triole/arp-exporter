@@ -21,7 +21,7 @@ func main() {
 	}
 
 	if CLI.ListVendors {
-		ae.ListVendors()
+		// ae.ListVendors()
 		os.Exit(0)
 	}
 

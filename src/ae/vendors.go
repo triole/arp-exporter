@@ -4,8 +4,6 @@ import (
 	_ "embed"
 	"encoding/json"
 	"errors"
-	"fmt"
-	"sort"
 	"strings"
 
 	"github.com/triole/logseal"
@@ -14,7 +12,8 @@ import (
 //go:embed vendors.json
 var vendorsJSON string
 
-type tVendors []tVendor
+type tVendorsList []tVendor
+type tVendorsMap map[string]tVendor
 
 type tVendor struct {
 	MacPrefix  string `json:"macPrefix"`
@@ -22,25 +21,6 @@ type tVendor struct {
 	Private    bool   `json:"private"`
 	BlockType  string `json:"blockType"`
 	LastUpdate string `json:"lastUpdate"`
-}
-
-func (arr tVendors) Len() int {
-	return len(arr)
-}
-
-func (arr tVendors) Less(i, j int) bool {
-	return arr[i].MacPrefix < arr[j].MacPrefix
-}
-
-func (arr tVendors) Swap(i, j int) {
-	arr[i], arr[j] = arr[j], arr[i]
-}
-
-func (ae *tAE) ListVendors() {
-	sort.Sort(ae.Vendors)
-	for _, el := range ae.Vendors {
-		fmt.Printf("%-16s %s\n", el.MacPrefix, el.Name)
-	}
 }
 
 func (ae *tAE) PrintMacInformation(mac string) {
@@ -59,20 +39,26 @@ func (ae *tAE) PrintMacInformation(mac string) {
 }
 
 func (ae *tAE) unmarshalVendors() {
-	err := json.Unmarshal([]byte(vendorsJSON), &ae.Vendors)
+	var vendorList tVendorsList
+	err := json.Unmarshal([]byte(vendorsJSON), &vendorList)
 	if err != nil {
 		ae.Lg.Fatal(
 			"error during unmarshal vendor json: ",
 			logseal.F{"error": err},
 		)
 	}
+	ae.Vendors = make(map[string]tVendor)
+	for _, ven := range vendorList {
+		ae.Vendors[strings.ToLower(ven.MacPrefix)] = ven
+	}
 }
 
 func (ae tAE) getVendor(mac string) (vendor tVendor) {
-	prefix := mac[0:8]
-	for _, el := range ae.Vendors {
-		if strings.EqualFold(el.MacPrefix, prefix) {
-			vendor = el
+	var prefix string
+	for i := 12; i >= 1; i-- {
+		prefix = strings.ToLower(mac[0:i])
+		if val, ok := ae.Vendors[prefix]; ok {
+			vendor = val
 			break
 		}
 	}
