@@ -17,43 +17,33 @@ type Conf struct {
 	Info           string
 	List           bool
 	EnableVendors  bool
-	Hosts          map[string]string
+	Hosts          map[string]tHost
 	Lg             logseal.Logseal
 }
 
+type tHost struct {
+	MAC  string `yaml:"mac"`
+	Name string `yaml:"name"`
+	Itf  string `yaml:"itf"`
+}
+
 func Init(cli interface{}, lg logseal.Logseal) (conf Conf) {
+	conf.Lg = lg
 	conf.ArpTable = getcli(cli, "ArpTableFile").(string)
 	if conf.ArpTable != "" {
 		conf.ArpTable = absPathFatal(conf.ArpTable, lg)
 		existsFatal(conf.ArpTable, lg)
 	}
 	conf.HostnameConfig = getcli(cli, "HostnameConfig").(string)
-	var err error
 	if conf.HostnameConfig != "" {
 		conf.HostnameConfig = absPathFatal(conf.HostnameConfig, lg)
 		existsFatal(conf.HostnameConfig, lg)
-
-		var raw []byte
-		raw, err = os.ReadFile(conf.HostnameConfig)
-		if err != nil {
-			lg.Error(
-				"can not read config",
-				logseal.F{"path": conf.HostnameConfig, "error": err},
-			)
-		}
-		err = yaml.Unmarshal(raw, &conf.Hosts)
-		if err != nil {
-			lg.Error(
-				"can not unmarshal conf",
-				logseal.F{"path": conf.HostnameConfig, "error": err},
-			)
-		}
+		conf.loadHostnameConfig()
 	}
 	conf.Bind = getcli(cli, "Bind").(string)
 	conf.Info = getcli(cli, "MacInfo").(string)
 	conf.List = getcli(cli, "ListVendors").(bool)
 	conf.EnableVendors = getcli(cli, "EnableVendors").(bool)
-	conf.Lg = lg
 	return
 }
 
@@ -76,6 +66,31 @@ func getcli(cli interface{}, keypath string) (r interface{}) {
 				r = field.Interface()
 			}
 		}
+	}
+	return
+}
+
+func (conf *Conf) loadHostnameConfig() {
+	var hostnamesList []tHost
+	var raw []byte
+	var err error
+	raw, err = os.ReadFile(conf.HostnameConfig)
+	if err != nil {
+		conf.Lg.Error(
+			"can not read config",
+			logseal.F{"path": conf.HostnameConfig, "error": err},
+		)
+	}
+	err = yaml.Unmarshal(raw, &hostnamesList)
+	if err != nil {
+		conf.Lg.Error(
+			"can not unmarshal conf",
+			logseal.F{"path": conf.HostnameConfig, "error": err},
+		)
+	}
+	conf.Hosts = make(map[string]tHost)
+	for _, host := range hostnamesList {
+		conf.Hosts[host.MAC] = host
 	}
 	return
 }

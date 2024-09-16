@@ -22,6 +22,7 @@ type tArpTable []tArpEntry
 type tArpEntry struct {
 	MAC    string `json:"mac"`
 	IP     string `json:"ip"`
+	Itf    string `json:"itf,omitempty"`
 	Name   string `json:"name,omitempty"`
 	Vendor string `json:"vendor,omitempty"`
 }

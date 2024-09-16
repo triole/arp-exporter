@@ -25,7 +25,13 @@ func (ae *tAE) GetArpTable(params tParams) (err error) {
 				IP:  ae.findAll(ae.Rx.IP, line),
 			}
 			if newEntry.MAC != "" && newEntry.IP != "" {
-				newEntry.Name = ae.Conf.GetHostName(newEntry.MAC)
+				host := ae.Conf.GetHostName(newEntry.MAC)
+				if host.Name != "" {
+					newEntry.Name = host.Name
+				}
+				if host.Itf != "" {
+					newEntry.Itf = host.Itf
+				}
 				var vendor tVendor
 				if ae.Conf.EnableVendors {
 					vendor = ae.getVendor(newEntry.MAC)
