@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,21 +9,25 @@
             font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, Liberation Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
             margin: 0;
         }
+
         header {
-            background-color: #0e6655 ;
+            background-color: #0e6655;
             color: #fff;
             font-size: 1rem;
             padding: 1rem;
         }
+
         main {
             padding: 1rem;
         }
+
         label {
             display: inline-block;
             width: 0.5em;
         }
     </style>
 </head>
+
 <body>
     <header>
         <h1>ARP Exporter</h1>
@@ -35,6 +40,31 @@
                 <li><a href="/metrics">metrics</a></li>
             </ul>
         </div>
+        <h2>Examples of supported URL Parameters</h2>
+        <div>
+            <ul>
+                <li>
+                    <a href="/json?include=192.168.0.4/30">
+                        /json?include=192.168.0.4/30
+                    </a>
+                    to only include a single ip or ips from a specific cidr range
+                </li>
+                <li>
+                    <a href="/json?exclude=192.168.0.6">
+                        /json?exclude=192.168.0.6
+                    </a>
+                    to exclude a single ip or ips from a range
+                </li>
+                <li>
+                    <a href="/metrics?include=192.168.0.0/24&exclude=192.168.0.11">
+                        /metrics?include=192.168.0.0/24&exclude=192.168.0.11
+                    </a>
+                </li>
+                <p>Note that exclude overwrites include in case both parameters are specified.<br>
+                    Each endpoint supports the same parameters.</p>
+            </ul>
+        </div>
     </main>
 </body>
+
 </html>
