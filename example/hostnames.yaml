@@ -1,0 +1,10 @@
+---
+- name: my_pc
+  itf: eth0
+  mac: bc:fc:e7:yy:zz:zz
+- name: my_tablet
+  itf: wifi
+  mac: 00:1a:11:aa:bb:cc
+- name: another_pc
+  itf: wifi
+  mac: 78:d6:b2:jj:kk:ll
