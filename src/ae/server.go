@@ -29,7 +29,7 @@ func (ae tAE) servePrometheusMetrics(w http.ResponseWriter, r *http.Request) {
 	if err == nil {
 		metrics := ae.makePrometheusMetrics()
 		ae.Lg.Debug(
-			"serve prometheus metrics", logseal.F{"client": getClientIP(r)},
+			"serve prometheus metrics", logseal.F{"client": ae.getClientIP(r)},
 		)
 		fmt.Fprintf(w, string(metrics))
 	}
@@ -41,13 +41,13 @@ func (ae tAE) serveJSON(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 		ae.Lg.Debug(
-			"serve json", logseal.F{"client": getClientIP(r)},
+			"serve json", logseal.F{"client": ae.getClientIP(r)},
 		)
 		json.NewEncoder(w).Encode(ae.ArpTable)
 	}
 }
 
-func getClientIP(r *http.Request) string {
+func (ae tAE) getClientIP(r *http.Request) string {
 	IPAddress := r.Header.Get("X-Real-Ip")
 	if IPAddress == "" {
 		IPAddress = r.Header.Get("X-Forwarded-For")
