@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/triole/logseal"
 
@@ -12,6 +13,11 @@ import (
 
 //go:embed index.html
 var indexPage string
+
+type tParams struct {
+	Exclude []string
+	Include []string
+}
 
 func (ae tAE) RunServer() {
 	http.HandleFunc("/metrics", ae.servePrometheusMetrics)
@@ -25,7 +31,8 @@ func (ae tAE) indexPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ae tAE) servePrometheusMetrics(w http.ResponseWriter, r *http.Request) {
-	err := ae.GetArpTable()
+	params := ae.getParams(r.URL.Query())
+	err := ae.GetArpTable(params)
 	if err == nil {
 		metrics := ae.makePrometheusMetrics()
 		ae.Lg.Debug(
@@ -36,7 +43,8 @@ func (ae tAE) servePrometheusMetrics(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ae tAE) serveJSON(w http.ResponseWriter, r *http.Request) {
-	err := ae.GetArpTable()
+	params := ae.getParams(r.URL.Query())
+	err := ae.GetArpTable(params)
 	if err == nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
@@ -56,4 +64,14 @@ func (ae tAE) getClientIP(r *http.Request) string {
 		IPAddress = r.RemoteAddr
 	}
 	return IPAddress
+}
+
+func (ae tAE) getParams(m url.Values) (params tParams) {
+	if val, ok := m["exclude"]; ok {
+		params.Exclude = val
+	}
+	if val, ok := m["include"]; ok {
+		params.Include = val
+	}
+	return
 }

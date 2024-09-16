@@ -9,7 +9,7 @@ import (
 	"github.com/triole/logseal"
 )
 
-func (ae *tAE) GetArpTable() (err error) {
+func (ae *tAE) GetArpTable(params tParams) (err error) {
 	var by []byte
 	ae.ArpTable = []tArpEntry{}
 	if ae.Conf.ArpTable == "" {
@@ -33,7 +33,9 @@ func (ae *tAE) GetArpTable() (err error) {
 				if vendor.Name != "" {
 					newEntry.Vendor = vendor.Name
 				}
-				ae.ArpTable = append(ae.ArpTable, newEntry)
+				if ae.appendIP(params, newEntry.IP) {
+					ae.ArpTable = append(ae.ArpTable, newEntry)
+				}
 			}
 		}
 	} else {
@@ -44,7 +46,8 @@ func (ae *tAE) GetArpTable() (err error) {
 }
 
 func (ae *tAE) PrintArpTable() {
-	err := ae.GetArpTable()
+	var params tParams
+	err := ae.GetArpTable(params)
 	if err == nil {
 		ae.pprint(ae.ArpTable)
 	}
