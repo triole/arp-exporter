@@ -55,4 +55,4 @@ The tool supports hostname lookup if a hostnames config is provided using `-n`. 
 
 ## Vendors
 
-If enabled using `-e`, the arp-exporter also adds vendor information to the output. Vendor database taken from [maclookup.app](https://maclookup.app/downloads/json-database).
+If enabled using `-e`, the arp-exporter also adds vendor information to the output. The vendor database is embedded into the tool and was taken from [maclookup.app](https://maclookup.app/downloads/json-database).
