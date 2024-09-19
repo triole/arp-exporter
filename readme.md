@@ -1,5 +1,17 @@
 # ARP Exporter
 
+<!-- toc -->
+
+- [Synopsis](#synopsis)
+- [Help](#help)
+- [Vendors](#vendors)
+
+<!-- /toc -->
+
+## Synopsis
+
+The arp-exporter allows to export the arp table as json or prometheus metric. It works as command line tool or web server. Running a server will provide the endpoints `/json` and `/metrics` delivering the relevant information. There also are a few request parameters that allow address filtering and other things. Feel free to check the index page at `/` for more information.
+
 ## Help
 
 ```go mdox-exec="r -h"
