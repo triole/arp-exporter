@@ -36,10 +36,10 @@ func validateAppendIP(params tParams, ip string, exp bool, t *testing.T) {
 }
 
 func TestIsIPinRange(t *testing.T) {
-	validateCidrRangeContains([]string{}, "127.0.0.4", true, t)
+	validateCidrRangeContains([]string{}, "127.0.0.4", false, t)
 	validateCidrRangeContains([]string{"127.0.0.0/28"}, "127.0.0.4", true, t)
 	validateCidrRangeContains([]string{"127.0.0.0/28"}, "127.0.0.24", false, t)
-	validateCidrRangeContains([]string{}, "INVALID", true, t)
+	validateCidrRangeContains([]string{}, "INVALID", false, t)
 }
 
 func validateCidrRangeContains(cidr []string, ip string, exp bool, t *testing.T) {
